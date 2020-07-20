@@ -2,6 +2,9 @@ from time import sleep
 from linear_fan_control import LinearFanControl
 from temp_reader import TempReader
 from rpm_reader import RPMReader
+from wifi import connect_wifi
+
+connect_wifi()
 
 lfcIn = LinearFanControl(pwm_pin=22, min_temp=25, max_temp=38)
 lfcOut = LinearFanControl(pwm_pin=27, min_temp=25, max_temp=35)
