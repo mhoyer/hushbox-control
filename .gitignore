@@ -145,4 +145,11 @@ dmypy.json
 .micropy/
 !micropy.json
 
-src/wifi_secrets.py
+src/config.py
+
+
+### KiCad
+*-bak
+*-cache
+*.bck
+
