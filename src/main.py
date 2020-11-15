@@ -3,6 +3,7 @@ from linear_fan_control import LinearFanControl
 from temp_reader import TempReader
 from rpm_reader import RPMReader
 from wifi import connect_wifi
+from metrics import send_metrics
 from machine import Pin
 
 connect_wifi()
@@ -27,6 +28,7 @@ while True:
     if temp < lfc_out.min_temp:
         fan_switch.off()
         print("Temp={:<7}C".format(temp))
+        send_metrics('temperature temp={}'.format(temp))
     else:
         fan_switch.on()
         lfc_in.update_pwm_for_temp(temp)
@@ -37,4 +39,9 @@ while True:
             lfc_in.pwm.duty(), rpm_in.rpm,
             lfc_out.pwm.duty(), rpm_out.rpm))
 
+        send_metrics('\n'.join([
+            'temperature temp={}'.format(temp),
+            'fan,id=in pwm={},rpm={}'.format(lfc_in.pwm.duty(), rpm_in.rpm),
+            'fan,id=out pwm={},rpm={}'.format(lfc_out.pwm.duty(), rpm_out.rpm)
+        ]))
     sleep(3)
