@@ -8,26 +8,30 @@ from machine import Pin
 
 connect_wifi()
 
-lfc_in = LinearFanControl(pwm_pin=22, min_temp=23, max_temp=30)
-lfc_out = LinearFanControl(pwm_pin=27, min_temp=23, max_temp=30)
+lfc_in = LinearFanControl(pwm_pin=23, min_temp=23, max_temp=30)
+lfc_out = LinearFanControl(pwm_pin=18, min_temp=23, max_temp=30)
 
-rpm_in = RPMReader(rpm_pin=23)
-rpm_out = RPMReader(rpm_pin=26)
+rpm_in = RPMReader(rpm_pin=22)
+rpm_out = RPMReader(rpm_pin=5)
 
-temp_reader = TempReader(pin=18)
-fan_switch = Pin(32, Pin.OUT)
+temp_reader = TempReader(pin=19)
+# temp_reader_2 = TempReader(pin=16)
+fan_switch = Pin(21, Pin.OUT)
+fan_switch_2 = Pin(17, Pin.OUT)
 
 while True:
-    temps = temp_reader.read_temps()
     temp = 100
+    temp2 = 100
     try:
-        temp = list(temps)[0]
+        temps = list(temp_reader.read_temps())
+        temp = temps[0]
+        temp2 = temps[1]
     except Exception:
         pass
 
     if temp < lfc_out.min_temp:
         fan_switch.off()
-        print("Temp={:<7}C".format(temp))
+        print("Temp={:<7}C Temp2={:<7}C".format(temp, temp2))
         send_metrics('temperature temp={}'.format(temp))
     else:
         fan_switch.on()
