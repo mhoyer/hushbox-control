@@ -24,8 +24,8 @@ case_w = pcb_w + 2*case_pcb_gap;
 case_bottom_h = ctrl_h + dome_h;
 case_top_h = 1;
 
-// print_bottom();
-print_bottom_preview();
+print_bottom();
+// print_bottom_preview();
 // print_top();
 // show_both();
 
@@ -129,6 +129,16 @@ module Holes() {
     translate([usb_hole_x, case_l, usb_hole_z])
       rotate([90])
         rounded_hole(io2_hole_w, io2_hole_h, wall_thickness);
+
+    // Switch
+    switch_w = 13;
+    switch_x = 33.8;
+    switch_z = 11.92 / 2;
+    switch_r = 3; // d=5.92
+
+    translate([switch_x, case_l+2*wall_thickness, switch_z])
+      rotate([90])
+        cylinder(r=switch_r, h=3*wall_thickness);
   }
 }
 
