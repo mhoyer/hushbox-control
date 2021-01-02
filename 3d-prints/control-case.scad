@@ -25,8 +25,9 @@ case_bottom_h = ctrl_h + dome_h;
 case_top_h = 1;
 
 // print_bottom();
+print_bottom_preview();
 // print_top();
-show_both();
+// show_both();
 
 module rounded_hole(w, h, thickness=wall_thickness/2) {
   translate([0,0,-2*thickness])
@@ -237,6 +238,14 @@ module print_bottom() {
     Bottom();
 }
 
+module print_bottom_preview() {
+  intersection()
+  {
+    print_bottom();
+    cube([28,14,13]);
+  }
+}
+
 module print_top() {
   translate([0, -5])
   rotate([180])
@@ -252,6 +261,6 @@ module show_both() {
     Top();
 
   // The controllers hull:
-//  #translate([case_pcb_gap+wall_thickness, case_pcb_gap+wall_thickness, 3+wall_thickness]) cube([pcb_w, pcb_l, ctrl_h]);
+  // #translate([case_pcb_gap+wall_thickness, case_pcb_gap+wall_thickness, 3+wall_thickness]) cube([pcb_w, pcb_l, ctrl_h]);
 }
 
