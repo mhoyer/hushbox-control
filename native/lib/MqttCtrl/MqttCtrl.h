@@ -14,6 +14,7 @@ private:
     std::map<String, TOPIC_RCV_CALLBACK_SIGNATURE> _subscriptions;
     void _reconnect();
     unsigned long _lastConnect;
+    void _resubscribe();
     void receivedCallback(char* topic, byte* payload, unsigned int length);
 
 public:

@@ -30,7 +30,7 @@ void MqttCtrl::_reconnect()
 {
     if (!this->_pubSubClient->connected())
     {
-        if (millis() - this->_lastConnect < 10000)
+        if (millis() > 5000 && millis() - this->_lastConnect < 10000)
         {
             return;
         }
@@ -63,6 +63,7 @@ void MqttCtrl::loop()
     if (!this->_pubSubClient->connected())
     {
         this->_reconnect();
+        this->_resubscribe();
     }
     else
     {
@@ -72,24 +73,32 @@ void MqttCtrl::loop()
 
 void MqttCtrl::subscribe(String topic, TOPIC_RCV_CALLBACK_SIGNATURE cb)
 {
-    std::map<String, TOPIC_RCV_CALLBACK_SIGNATURE> subs = this->_subscriptions;
-
-    if (subs.find(topic) == subs.end())
+    if (this->_pubSubClient->connected() && _subscriptions.find(topic) == _subscriptions.end())
     {
         this->_pubSubClient->subscribe(topic.c_str());
         Serial.print("Subscribed to ");
-        Serial.println(topic);
+        Serial.println(topic.c_str());
     }
 
-    subs[topic] = cb;
+    _subscriptions.insert({ topic, cb });
+}
+
+void MqttCtrl::_resubscribe()
+{
+    Serial.println("Resubscribing");
+
+    for (const auto &sub : _subscriptions) {
+        auto topic = sub.first;
+        this->_pubSubClient->subscribe(topic.c_str());
+    }
 }
 
 void MqttCtrl::receivedCallback(char *topic, byte *payload, unsigned int length)
 {
-    Serial.print("Message received: ");
+    Serial.print("Message received at: ");
     Serial.println(topic);
 
-    Serial.print("payload: ");
+    Serial.print("  Payload: ");
     for (int i = 0; i < length; i++)
     {
         Serial.print((char)payload[i]);
@@ -97,10 +106,14 @@ void MqttCtrl::receivedCallback(char *topic, byte *payload, unsigned int length)
 
     Serial.println();
 
-    std::map<String, TOPIC_RCV_CALLBACK_SIGNATURE> subs = this->_subscriptions;
-    if (subs.find(topic) != subs.end())
+    if (_subscriptions.find(topic) != _subscriptions.end())
     {
-        TOPIC_RCV_CALLBACK_SIGNATURE cb = subs[topic];
-        cb((char*)payload);
+        auto cb = _subscriptions[topic];
+        char payload_s[length+1];
+        strlcpy(payload_s, (char*)payload, length+1);
+        cb(payload_s);
+    }
+    else {
+        Serial.println("  No subscription found for this topic.");
     }
 }
