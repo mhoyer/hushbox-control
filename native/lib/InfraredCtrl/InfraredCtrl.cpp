@@ -23,9 +23,34 @@ uint64_t ir_decode()
   {
     return 0;
   }
+  Serial.println(resultToHumanReadableBasic(&results));
   ir_recv.resume();
 
   return results.value;
+}
+
+void ir_turn_receiver_on()
+{
+    ir_send_out.sendNEC(IR_YAMAHA_ON);
+    delay(1000);
+    ir_send_out.sendNEC(IR_YAMAHA_D_TV);
+}
+
+void ir_turn_receiver_off()
+{
+    ir_send_out.sendNEC(IR_YAMAHA_OFF);
+}
+
+void ir_turn_projector_on()
+{
+    ir_send_in.sendNEC(IR_BENQ_ON);
+}
+
+void ir_turn_projector_off()
+{
+    ir_send_in.sendNEC(IR_BENQ_OFF);
+    delay(1000);
+    ir_send_in.sendNEC(IR_BENQ_OFF);
 }
 
 
