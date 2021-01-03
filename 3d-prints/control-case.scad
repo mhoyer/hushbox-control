@@ -19,14 +19,15 @@ dome_r = pcb_hole_dist + wall_thickness/2;
 dome_h = ctrl_bottom_pins_h + 1;
 
 case_pcb_gap = 0.5;
+case_w_overlap = 6;
 case_l = pcb_l + 2*case_pcb_gap;
-case_w = pcb_w + 2*case_pcb_gap;
+case_w = pcb_w + 2*case_pcb_gap + 2*case_w_overlap;
 case_bottom_h = ctrl_h + dome_h;
 case_top_h = 1;
 
-print_bottom();
+// print_bottom();
 // print_bottom_preview();
-// print_top();
+print_top();
 // show_both();
 
 module rounded_hole(w, h, thickness=wall_thickness/2) {
@@ -146,7 +147,8 @@ module Bottom() {
   translate([wall_thickness, wall_thickness, wall_thickness])
     difference() {
       union() {
-        RoundedBoxCase(case_w, case_l, case_bottom_h, wall_thickness);
+        translate([-case_w_overlap,0,0])
+          RoundedBoxCase(case_w, case_l, case_bottom_h, wall_thickness);
 
         // domes
         translate([case_pcb_gap, case_pcb_gap]) union() {
@@ -173,17 +175,58 @@ module Bottom() {
         nut_d = 5; // orig: d=4.92;
         nut_ro = nut_d/sqrt(3);
         nut_h = 2; // orog: 1.82
-        translate([pcb_hole_dist, pcb_hole_dist, -wall_thickness])
+        translate([pcb_hole_dist, pcb_hole_dist, -wall_thickness-0.01])
           cylinder(r=nut_ro, h=nut_h, $fn=6);
-        translate([pcb_hole_ul_x, pcb_l - pcb_hole_ul_y, -wall_thickness])
+        translate([pcb_hole_ul_x, pcb_l - pcb_hole_ul_y, -wall_thickness-0.01])
           cylinder(r=nut_ro, h=nut_h, $fn=6);
-        translate([pcb_w - pcb_hole_dist, pcb_l - pcb_hole_dist, -wall_thickness])
+        translate([pcb_w - pcb_hole_dist, pcb_l - pcb_hole_dist, -wall_thickness-0.01])
           cylinder(r=nut_ro, h=nut_h, $fn=6);
-        translate([pcb_w - pcb_hole_dist, pcb_hole_dist, -wall_thickness])
+        translate([pcb_w - pcb_hole_dist, pcb_hole_dist, -wall_thickness-0.01])
           cylinder(r=nut_ro, h=nut_h, $fn=6);
+
+        // floor holes
+        floor_hole_d = 5;
+        for (x=[0:5]) {
+          translate([pcb_w * (x+1.5)/8, pcb_l * 0.5/8, -2*wall_thickness])
+            cylinder(d=floor_hole_d, h=3*wall_thickness);
+        }
+
+        for (y=[1:2:5]) for (x=[0:8]) {
+          translate([pcb_w * x/8, pcb_l * (y+0.5)/8, -2*wall_thickness])
+            cylinder(d=floor_hole_d, h=3*wall_thickness);
+        }
+
+        for (y=[2:2:4]) for (x=[1:8]) {
+          translate([pcb_w * (x-0.5)/8, pcb_l * (y+0.5)/8, -2*wall_thickness])
+            cylinder(d=floor_hole_d, h=3*wall_thickness);
+        }
+
+        translate([pcb_w * (0.5)/8, pcb_l * (6.5)/8, -2*wall_thickness])
+          cylinder(d=floor_hole_d, h=3*wall_thickness);
+
+        for (x=[3:8]) {
+          translate([pcb_w * (x-0.5)/8, pcb_l * (6.5)/8, -2*wall_thickness])
+            cylinder(d=floor_hole_d, h=3*wall_thickness);
+        }
+
+        for (x=[3:6]) {
+          translate([pcb_w * (x)/8, pcb_l * (7.5)/8, -2*wall_thickness])
+            cylinder(d=floor_hole_d, h=3*wall_thickness);
+        }
       }
 
       Holes();
+
+      // wallmount holes
+      wm_screw_d = 3;
+      translate([-0.5*case_w_overlap, case_w_overlap, -2*wall_thickness])
+        cylinder(d = wm_screw_d + 0.1, h = 4*wall_thickness);
+      translate([-0.5*case_w_overlap, case_l - case_w_overlap, -2*wall_thickness])
+        cylinder(d = wm_screw_d + 0.1, h = 4*wall_thickness);
+      translate([case_w - 1.5*case_w_overlap, case_w_overlap, -2*wall_thickness])
+        cylinder(d = wm_screw_d + 0.1, h = 4*wall_thickness);
+      translate([case_w - 1.5*case_w_overlap, case_l - case_w_overlap, -2*wall_thickness])
+        cylinder(d = wm_screw_d + 0.1, h = 4*wall_thickness);
     }
 }
 
@@ -194,6 +237,7 @@ module Top() {
     difference() {
       translate([0, 0, case_top_h])
         difference() {
+          translate([-case_w_overlap, 0, 0])
           rotate_about_pt([0,180,0], pt=[case_w/2, case_l/2])
           union() {
             // Outer box
@@ -252,7 +296,8 @@ module print_bottom_preview() {
   intersection()
   {
     print_bottom();
-    cube([28,14,13]);
+    translate([-case_w_overlap,0,0])
+      cube([28+case_w_overlap,15,13]);
   }
 }
 
@@ -267,10 +312,10 @@ module show_both() {
     Bottom();
 
   color("green", alpha=0.6)
-  translate([0,0,case_bottom_h+case_top_h+2*wall_thickness+10])
+  translate([0,0,case_bottom_h+case_top_h+2*wall_thickness+15])
     Top();
 
   // The controllers hull:
-  // #translate([case_pcb_gap+wall_thickness, case_pcb_gap+wall_thickness, 3+wall_thickness]) cube([pcb_w, pcb_l, ctrl_h]);
+  #translate([case_pcb_gap+wall_thickness, case_pcb_gap+wall_thickness, 3+wall_thickness+0.01]) cube([pcb_w, pcb_l, ctrl_h]);
 }
 
