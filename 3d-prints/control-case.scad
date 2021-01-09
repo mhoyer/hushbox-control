@@ -15,7 +15,7 @@ wall_thickness = 1.2; // 3x0.4
 $fn=30;
 
 // Derived values
-dome_r = pcb_hole_dist + wall_thickness/2;
+dome_r = pcb_hole_dist + wall_thickness;
 dome_h = ctrl_bottom_pins_h + 1;
 
 case_pcb_gap = 0.5;
