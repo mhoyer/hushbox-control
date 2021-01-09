@@ -282,6 +282,19 @@ module Top() {
           translate([esp_hole_x-1, -1, -case_top_h-0.1])
             mirror([0,0,1])
               cube([esp_hole_w, esp_hole_l, case_bottom_h]);
+
+          // top holes
+          floor_hole_d = 4;
+
+          translate([-case_w_overlap, 0, 0]) {
+            for (x=[4:6]) for (y=[1:5]) {
+              x = y % 2 ? x : x-0.5;
+              if (x >= 2) {
+                translate([case_w * (x+0.5)/8, case_l * (y+0.5)/7, -2*wall_thickness])
+                  cylinder(d=floor_hole_d, h=3*wall_thickness);
+              }
+            }
+          }
         }
       Holes();
     }
