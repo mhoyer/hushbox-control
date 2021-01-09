@@ -135,7 +135,7 @@ module Holes() {
     switch_w = 13;
     switch_x = 33.8;
     switch_z = 11.92 / 2;
-    switch_r = 3; // d=5.92
+    switch_r = 3.2; // d=5.92
 
     translate([switch_x, case_l+2*wall_thickness, switch_z])
       rotate([90])
@@ -161,7 +161,7 @@ module Bottom() {
 
       translate([case_pcb_gap, case_pcb_gap]) union() {
         // screw holes
-        screw_r = 1.25;
+        screw_r = 1.5;
         translate([pcb_hole_dist, pcb_hole_dist, -2*wall_thickness])
           cylinder(r=screw_r, h=dome_h+4*wall_thickness);
         translate([pcb_hole_ul_x, pcb_l - pcb_hole_ul_y, -2*wall_thickness])
@@ -172,7 +172,7 @@ module Bottom() {
           cylinder(r=screw_r, h=dome_h+4*wall_thickness);
 
         // nut sinks
-        nut_d = 5; // orig: d=4.92;
+        nut_d = 5.2; // orig: d=4.92;
         nut_ro = nut_d/sqrt(3);
         nut_h = 2; // orog: 1.82
         translate([pcb_hole_dist, pcb_hole_dist, -wall_thickness-0.01])
