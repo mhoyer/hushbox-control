@@ -1,11 +1,10 @@
 #include <Arduino.h>
 
-#include <WiFiCnx.h>
-#include <MqttCtrl.h>
-#include <InfraredCtrl.h>
-
 #include "config.h"
 #include "./ota/ota.h"
+#include "./WiFiCnx/WiFiCnx.h"
+#include "./MqttCtrl/MqttCtrl.h"
+#include "./InfraredCtrl/InfraredCtrl.h"
 
 WiFiCnx* wiFiCnx;
 MqttCtrl* mqtt;

@@ -1,5 +1,5 @@
 #include <WiFi.h>
-#include "WiFiCnx.h"
+#include "./WiFiCnx/WiFiCnx.h"
 
 WiFiClient wifiClient;
 

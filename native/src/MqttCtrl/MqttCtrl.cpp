@@ -2,7 +2,8 @@
 #include <functional>
 #include <WiFi.h>
 #include <PubSubClient.h>
-#include <MqttCtrl.h>
+
+#include "./MqttCtrl/MqttCtrl.h"
 
 using namespace std::placeholders; // for `_1` in std:bind
 

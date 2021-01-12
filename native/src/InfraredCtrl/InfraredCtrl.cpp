@@ -3,7 +3,7 @@
 #include <IRremoteESP8266.h>
 #include <IRutils.h>
 #include <IRsend.h>
-#include <InfraredCtrl.h>
+#include <./InfraredCtrl/InfraredCtrl.h>
 
 IRrecv ir_recv(RECV_PIN);
 IRsend ir_send_out(SEND_OUT_PIN);
