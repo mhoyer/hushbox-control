@@ -5,6 +5,7 @@
 #include <InfraredCtrl.h>
 
 #include "config.h"
+#include "./ota/ota.h"
 
 WiFiCnx* wiFiCnx;
 MqttCtrl* mqtt;
@@ -40,6 +41,7 @@ void setup()
   wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
   wiFiCnx->connect();
   delay(500);
+  ota_setup(cfg_hostname);
 
   mqtt = new MqttCtrl(*(wiFiCnx->client), cfg_mqtt_server, cfg_hostname);
   mqtt->connect();
@@ -51,6 +53,7 @@ void setup()
 void loop()
 {
   wiFiCnx->loop();
+  ArduinoOTA.handle();
   mqtt->loop();
 
   ir_decode();
