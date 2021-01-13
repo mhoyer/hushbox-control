@@ -5,6 +5,7 @@
 #include "./WiFiCnx/WiFiCnx.h"
 #include "./MqttCtrl/MqttCtrl.h"
 #include "./InfraredCtrl/InfraredCtrl.h"
+#include "./TempReader/TempReader.h"
 
 WiFiCnx* wiFiCnx;
 MqttCtrl* mqtt;
@@ -36,6 +37,7 @@ void setup()
   Serial.begin(9600);
   
   ir_setup();
+  temp_setup();
   
   wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
   wiFiCnx->connect();
@@ -56,6 +58,14 @@ void loop()
   mqtt->loop();
 
   ir_decode();
+  auto temps = temp_read();
+
+  Serial.print("in=");
+  Serial.print(temps[0]);
+  Serial.print("C  out=");
+  Serial.print(temps[1]);
+  Serial.println("C");
+
   delay(100);
 
   // restart ESP after 24h?
