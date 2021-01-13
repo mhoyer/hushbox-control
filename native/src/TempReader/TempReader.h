@@ -3,7 +3,7 @@
 
 #include <array>
 
-void temp_setup();
+void temp_setup(uint8_t pin);
 std::array<float,2> temp_read();
 
 #endif

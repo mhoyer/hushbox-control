@@ -37,7 +37,7 @@ void setup()
   Serial.begin(9600);
   
   ir_setup();
-  temp_setup();
+  temp_setup(cfg_pin_temp);
   
   wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
   wiFiCnx->connect();

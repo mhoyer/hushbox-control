@@ -4,3 +4,5 @@
 #define cfg_wifi_pwd "XXX"
 
 #define cfg_mqtt_server "XXX"
+
+#define cfg_pin_temp 19
