@@ -1,4 +1,4 @@
-#include <OneWire.h>
+#define REQUIRESALARMS false
 #include <DallasTemperature.h>
 
 #include "./TempReader/TempReader.h"
