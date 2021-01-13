@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 #include "config.h"
-#include "./ota/ota.h"
+#include "./OTA/OTA.h"
 #include "./WiFiCnx/WiFiCnx.h"
 #include "./MqttCtrl/MqttCtrl.h"
 #include "./InfraredCtrl/InfraredCtrl.h"

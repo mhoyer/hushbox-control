@@ -1,4 +1,4 @@
-#include "./ota.h"
+#include "./OTA.h"
 
 void ota_setup(const char* hostname) {
   ArduinoOTA.setHostname(hostname);
