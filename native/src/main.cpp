@@ -32,12 +32,30 @@ void set_movie_mode(String payload)
   }
 }
 
+void set_fan_mode(String payload)
+{
+  Serial.println("Setting fan " + payload);
+
+  if (strcmp(payload.c_str(), "on") == 0)
+  {
+    digitalWrite(cfg_pin_fan_switch_in, HIGH);
+    digitalWrite(cfg_pin_fan_switch_out, HIGH);
+  }
+  else if (strcmp(payload.c_str(), "off") == 0)
+  {
+    digitalWrite(cfg_pin_fan_switch_in, LOW);
+    digitalWrite(cfg_pin_fan_switch_out, LOW);
+  }
+}
+
 void setup()
 {
   Serial.begin(9600);
   
   ir_setup();
   temp_setup(cfg_pin_temp);
+  pinMode(cfg_pin_fan_switch_in, OUTPUT);
+  pinMode(cfg_pin_fan_switch_out, OUTPUT);
   
   wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
   wiFiCnx->connect();
@@ -48,6 +66,7 @@ void setup()
   mqtt->connect();
   delay(1000);
   mqtt->subscribe("hushboxctrl/movie_mode", set_movie_mode);
+  mqtt->subscribe("hushboxctrl/fan_mode", set_fan_mode);
   mqtt->subscribe("hushboxctrl", ping);
 }
 
