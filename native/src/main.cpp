@@ -66,6 +66,7 @@ void setup()
     mqtt->subscribe("hushboxctrl/fan_mode", set_fan_mode);
 }
 
+unsigned long _prev_monitor_millis;
 void loop()
 {
     wiFiCnx->loop();
@@ -76,17 +77,20 @@ void loop()
     auto temps = temp_read();
     auto rpms = rpm_read();
 
-    Serial.print(millis());
-    Serial.print(" | Temp in=");
-    Serial.print(temps.in);
-    Serial.print("C  out=");
-    Serial.print(temps.out);
-    Serial.print("C | Fan speed in=");
-    Serial.print(rpms.in);
-    Serial.print("RPM  out=");
-    Serial.print(rpms.out);
-    Serial.println("RPM");
-
+    if (millis() - _prev_monitor_millis > 3000)
+    {
+        _prev_monitor_millis = millis();
+        Serial.print(millis());
+        Serial.print(" | Temp in=");
+        Serial.print(temps.in);
+        Serial.print("C  out=");
+        Serial.print(temps.out);
+        Serial.print("C | Fan speed in=");
+        Serial.print(rpms.in);
+        Serial.print("RPM  out=");
+        Serial.print(rpms.out);
+        Serial.println("RPM");
+    }
     delay(100);
 
     // restart ESP after 24h?
