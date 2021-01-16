@@ -2,8 +2,6 @@
 #include "Client.h"
 #include <PubSubClient.h>
 
-void connect_wifi(String hostname, String ssid, String password);
-
 #define TOPIC_RCV_CALLBACK_SIGNATURE std::function<void(String)>
 
 class MqttCtrl {
