@@ -5,6 +5,7 @@
 #include "./WiFiCnx/WiFiCnx.h"
 #include "./MqttCtrl/MqttCtrl.h"
 #include "./InfraredCtrl/InfraredCtrl.h"
+#include "./RPMReader/RPMReader.h"
 #include "./TempReader/TempReader.h"
 
 WiFiCnx* wiFiCnx;
@@ -56,7 +57,8 @@ void setup()
   temp_setup(cfg_pin_temp);
   pinMode(cfg_pin_fan_switch_in, OUTPUT);
   pinMode(cfg_pin_fan_switch_out, OUTPUT);
-  
+  rpm_setup(cfg_pin_fan_rpm_in, cfg_pin_fan_rpm_out);
+
   wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
   wiFiCnx->connect();
   delay(500);
@@ -78,12 +80,18 @@ void loop()
 
   ir_decode();
   auto temps = temp_read();
+  auto rpms = rpm_read();
 
-  Serial.print("in=");
+  Serial.print(millis());
+  Serial.print(" | Temp in=");
   Serial.print(temps[0]);
   Serial.print("C  out=");
   Serial.print(temps[1]);
-  Serial.println("C");
+  Serial.print("C | Fan speed in=");
+  Serial.print(rpms.in);
+  Serial.print("RPM  out=");
+  Serial.print(rpms.out);
+  Serial.println("RPM");
 
   delay(100);
 
