@@ -10,3 +10,5 @@
 #define cfg_pin_fan_switch_out 17
 #define cfg_pin_fan_rpm_in 22
 #define cfg_pin_fan_rpm_out 5
+#define cfg_pin_fan_pwm_in 23
+#define cfg_pin_fan_pwm_out 18

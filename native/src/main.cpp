@@ -5,6 +5,7 @@
 #include "./WiFiCnx/WiFiCnx.h"
 #include "./MqttCtrl/MqttCtrl.h"
 #include "./InfraredCtrl/InfraredCtrl.h"
+#include "./LinearFanSpeed/LinearFanSpeed.h"
 #include "./RPMReader/RPMReader.h"
 #include "./TempReader/TempReader.h"
 
@@ -44,6 +45,7 @@ void set_fan_mode(String payload)
     }
 }
 
+lfc_t lfc_in, lfc_out;
 void setup()
 {
     Serial.begin(9600);
@@ -53,6 +55,18 @@ void setup()
     pinMode(cfg_pin_fan_switch_in, OUTPUT);
     pinMode(cfg_pin_fan_switch_out, OUTPUT);
     rpm_setup(cfg_pin_fan_rpm_in, cfg_pin_fan_rpm_out);
+    digitalWrite(cfg_pin_fan_switch_in, HIGH);
+    digitalWrite(cfg_pin_fan_switch_out, HIGH);
+
+    lfc_in.pin = cfg_pin_fan_pwm_in;
+    lfc_in.minTemp = 20;
+    lfc_in.maxTemp = 30;
+    lfc_out.pin = cfg_pin_fan_pwm_out;
+    lfc_out.minTemp = 20;
+    lfc_out.maxTemp = 30;
+
+    lfc_setup(lfc_in);
+    lfc_setup(lfc_out);
 
     wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
     wiFiCnx->connect();
@@ -76,6 +90,14 @@ void loop()
     ir_decode();
     auto temps = temp_read();
     auto rpms = rpm_read();
+
+    if (millis() > 15000 && millis() < 16000)
+        set_speed_by_temperature(lfc_in, 25);
+    if (millis() > 40000 && millis() < 41000)
+        set_speed_by_temperature(lfc_in, 20);
+    if (millis() > 60000 && millis() < 61000)
+        digitalWrite(cfg_pin_fan_switch_in, LOW);
+        digitalWrite(cfg_pin_fan_switch_out, LOW);
 
     if (millis() - _prev_monitor_millis > 3000)
     {

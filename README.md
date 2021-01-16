@@ -9,6 +9,7 @@
 
 ### Fan Control
 
+- [ESP32 Fan Controller](https://github.com/KlausMu/esp32-fan-controller)
 - [4-Wire PWM Controlled Fans - Pinout](https://allpinouts.org/pinouts/connectors/motherboards/motherboard-cpu-4-pin-fan/)
 - [How to read RPM from 3-wire fan](https://electronics.stackexchange.com/a/214082)
 - [Raspberry Pi - Building a PWM Fan Controller with DotNet IoT](http://blog.timwheeler.io/building-a-pwm-fan-controller-with-dotnet-iot/)
