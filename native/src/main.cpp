@@ -52,7 +52,7 @@ void set_fan_mode(String payload)
 void setup()
 {
   Serial.begin(9600);
-  
+
   ir_setup();
   temp_setup(cfg_pin_temp);
   pinMode(cfg_pin_fan_switch_in, OUTPUT);
@@ -84,9 +84,9 @@ void loop()
 
   Serial.print(millis());
   Serial.print(" | Temp in=");
-  Serial.print(temps[0]);
+  Serial.print(temps.in);
   Serial.print("C  out=");
-  Serial.print(temps[1]);
+  Serial.print(temps.out);
   Serial.print("C | Fan speed in=");
   Serial.print(rpms.in);
   Serial.print("RPM  out=");
