@@ -26,11 +26,11 @@ void temp_setup(uint8_t pin)
         Serial.println("Unable to find address for Device 1");
 }
 
-temp_values_t _recent_values;
+temp_values_t _recent_temp_values;
 temp_values_t temp_read()
 {
     sensors->requestTemperatures();
-    _recent_values.in = sensors->getTempC(in_sensor);
-    _recent_values.out = sensors->getTempC(out_sensor);
-    return _recent_values;
+    _recent_temp_values.in = sensors->getTempC(in_sensor);
+    _recent_temp_values.out = sensors->getTempC(out_sensor);
+    return _recent_temp_values;
 }
