@@ -6,7 +6,7 @@
 #include "./MqttCtrl/MqttCtrl.h"
 #include "ir-io.h"
 #include "linear-fan-speed.h"
-#include "./RPMReader/RPMReader.h"
+#include "rpm-reader.h"
 #include "temperatures-reader.h"
 
 WiFiCnx *wiFiCnx;
@@ -54,7 +54,7 @@ void setup()
     setupTemperaturesReader(CFG_PIN_TEMP);
     pinMode(CFG_PIN_FAN_SWITCH_IN, OUTPUT);
     pinMode(CFG_PIN_FAN_SWITCH_OUT, OUTPUT);
-    rpm_setup(CFG_PIN_FAN_RPM_IN, CFG_PIN_FAN_RPM_OUT);
+    setupRPMReader(CFG_PIN_FAN_RPM_IN, CFG_PIN_FAN_RPM_OUT);
     digitalWrite(CFG_PIN_FAN_SWITCH_IN, HIGH);
     digitalWrite(CFG_PIN_FAN_SWITCH_OUT, HIGH);
 
@@ -89,7 +89,7 @@ void loop()
 
     decodeIR();
     auto temps = readTemperatures();
-    auto rpms = rpm_read();
+    auto rpms = readRPMValues();
 
     if (millis() > 15000 && millis() < 16000)
         setSpeedByTemperature(lfs_in, 25);

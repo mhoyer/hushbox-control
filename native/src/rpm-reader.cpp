@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <functional>
 
-#include "./RPMReader.h"
+#include "rpm-reader.h"
 
 unsigned long rpm_in_cnt, rpm_out_cnt;
 unsigned long _last_millis;
@@ -9,7 +9,7 @@ unsigned long _last_millis;
 void ICACHE_RAM_ATTR _rpm_in_handler() { rpm_in_cnt++; }
 void ICACHE_RAM_ATTR _rpm_out_handler() { rpm_out_cnt++; }
 
-void rpm_setup(uint8_t rpm_in_pin, uint8_t rpm_out_pin)
+void setupRPMReader(uint8_t rpm_in_pin, uint8_t rpm_out_pin)
 {
     pinMode(rpm_in_pin, INPUT);
     pinMode(rpm_out_pin, INPUT);
@@ -18,7 +18,7 @@ void rpm_setup(uint8_t rpm_in_pin, uint8_t rpm_out_pin)
 }
 
 rpm_values_t _recent_rpm_values;
-rpm_values_t rpm_read()
+rpm_values_t readRPMValues()
 {
     auto millis_diff = millis() - _last_millis;
     if (millis_diff > 2000)
