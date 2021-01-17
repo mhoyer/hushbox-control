@@ -4,7 +4,7 @@
 #include "ota.h"
 #include "./WiFiCnx/WiFiCnx.h"
 #include "./MqttCtrl/MqttCtrl.h"
-#include "./InfraredCtrl/InfraredCtrl.h"
+#include "ir-io.h"
 #include "linear-fan-speed.h"
 #include "./RPMReader/RPMReader.h"
 #include "temperatures-reader.h"
@@ -18,14 +18,14 @@ void set_movie_mode(String payload)
 
     if (strcmp(payload.c_str(), "on") == 0)
     {
-        ir_turn_receiver_on();
-        ir_turn_projector_on();
+        IR::turnReceiverOn();
+        IR::turnProjectorOn();
     }
     else if (strcmp(payload.c_str(), "off") == 0)
     {
-        ir_turn_projector_off();
+        IR::turnProjectorOff();
         delay(500);
-        ir_turn_receiver_off();
+        IR::turnReceiverOff();
     }
 }
 
@@ -50,7 +50,7 @@ void setup()
 {
     Serial.begin(9600);
 
-    ir_setup();
+    setupIR(CFG_PIN_IR_RECEIVE, CFG_PIN_IR_SEND_IN, CFG_PIN_IR_SEND_OUT);
     setupTemperaturesReader(cfg_pin_temp);
     pinMode(cfg_pin_fan_switch_in, OUTPUT);
     pinMode(cfg_pin_fan_switch_out, OUTPUT);
@@ -87,7 +87,7 @@ void loop()
     ArduinoOTA.handle();
     mqtt->loop();
 
-    ir_decode();
+    decodeIR();
     auto temps = readTemperatures();
     auto rpms = rpm_read();
 
