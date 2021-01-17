@@ -7,7 +7,7 @@
 #include "./InfraredCtrl/InfraredCtrl.h"
 #include "linear-fan-speed.h"
 #include "./RPMReader/RPMReader.h"
-#include "./TempReader/TempReader.h"
+#include "temperatures-reader.h"
 
 WiFiCnx *wiFiCnx;
 MqttCtrl *mqtt;
@@ -51,7 +51,7 @@ void setup()
     Serial.begin(9600);
 
     ir_setup();
-    temp_setup(cfg_pin_temp);
+    setupTemperaturesReader(cfg_pin_temp);
     pinMode(cfg_pin_fan_switch_in, OUTPUT);
     pinMode(cfg_pin_fan_switch_out, OUTPUT);
     rpm_setup(cfg_pin_fan_rpm_in, cfg_pin_fan_rpm_out);
@@ -88,7 +88,7 @@ void loop()
     mqtt->loop();
 
     ir_decode();
-    auto temps = temp_read();
+    auto temps = readTemperatures();
     auto rpms = rpm_read();
 
     if (millis() > 15000 && millis() < 16000)

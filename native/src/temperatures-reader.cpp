@@ -1,13 +1,13 @@
 #define REQUIRESALARMS false
 #include <DallasTemperature.h>
 
-#include "./TempReader/TempReader.h"
+#include "temperatures-reader.h"
 
 OneWire *oneWire;
 DallasTemperature *sensors;
 DeviceAddress in_sensor, out_sensor;
 
-void temp_setup(uint8_t pin)
+void setupTemperaturesReader(uint8_t pin)
 {
     oneWire = new OneWire(pin);
     sensors = new DallasTemperature(oneWire);
@@ -26,8 +26,8 @@ void temp_setup(uint8_t pin)
         Serial.println("Unable to find address for Device 1");
 }
 
-temp_values_t _recent_temp_values;
-temp_values_t temp_read()
+temperature_values_t _recent_temp_values;
+temperature_values_t readTemperatures()
 {
     sensors->requestTemperatures();
     _recent_temp_values.in = sensors->getTempC(in_sensor);
