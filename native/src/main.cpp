@@ -35,13 +35,13 @@ void set_fan_mode(String payload)
 
     if (strcmp(payload.c_str(), "on") == 0)
     {
-        digitalWrite(cfg_pin_fan_switch_in, HIGH);
-        digitalWrite(cfg_pin_fan_switch_out, HIGH);
+        digitalWrite(CFG_PIN_FAN_SWITCH_IN, HIGH);
+        digitalWrite(CFG_PIN_FAN_SWITCH_OUT, HIGH);
     }
     else if (strcmp(payload.c_str(), "off") == 0)
     {
-        digitalWrite(cfg_pin_fan_switch_in, LOW);
-        digitalWrite(cfg_pin_fan_switch_out, LOW);
+        digitalWrite(CFG_PIN_FAN_SWITCH_IN, LOW);
+        digitalWrite(CFG_PIN_FAN_SWITCH_OUT, LOW);
     }
 }
 
@@ -51,29 +51,29 @@ void setup()
     Serial.begin(9600);
 
     setupIR(CFG_PIN_IR_RECEIVE, CFG_PIN_IR_SEND_IN, CFG_PIN_IR_SEND_OUT);
-    setupTemperaturesReader(cfg_pin_temp);
-    pinMode(cfg_pin_fan_switch_in, OUTPUT);
-    pinMode(cfg_pin_fan_switch_out, OUTPUT);
-    rpm_setup(cfg_pin_fan_rpm_in, cfg_pin_fan_rpm_out);
-    digitalWrite(cfg_pin_fan_switch_in, HIGH);
-    digitalWrite(cfg_pin_fan_switch_out, HIGH);
+    setupTemperaturesReader(CFG_PIN_TEMP);
+    pinMode(CFG_PIN_FAN_SWITCH_IN, OUTPUT);
+    pinMode(CFG_PIN_FAN_SWITCH_OUT, OUTPUT);
+    rpm_setup(CFG_PIN_FAN_RPM_IN, CFG_PIN_FAN_RPM_OUT);
+    digitalWrite(CFG_PIN_FAN_SWITCH_IN, HIGH);
+    digitalWrite(CFG_PIN_FAN_SWITCH_OUT, HIGH);
 
-    lfs_in.pin = cfg_pin_fan_pwm_in;
+    lfs_in.pin = CFG_PIN_FAN_PWM_IN;
     lfs_in.min_temp = 20;
     lfs_in.max_temp = 30;
-    lfs_out.pin = cfg_pin_fan_pwm_out;
+    lfs_out.pin = CFG_PIN_FAN_PWM_OUT;
     lfs_out.min_temp = 20;
     lfs_out.max_temp = 30;
 
     setupLinearFanSpeed(lfs_in);
     setupLinearFanSpeed(lfs_out);
 
-    wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
+    wiFiCnx = new WiFiCnx(CFG_HOSTNAME, CFG_WIFI_SSID, CFG_WIFI_PWD);
     wiFiCnx->connect();
     delay(500);
-    setupOTA(cfg_hostname);
+    setupOTA(CFG_HOSTNAME);
 
-    mqtt = new MqttCtrl(*(wiFiCnx->client), cfg_mqtt_server, cfg_hostname);
+    mqtt = new MqttCtrl(*(wiFiCnx->client), CFG_MQTT_SERVER, CFG_HOSTNAME);
     mqtt->connect();
     delay(1000);
     mqtt->subscribe("hushboxctrl/movie_mode", set_movie_mode);
@@ -96,8 +96,8 @@ void loop()
     if (millis() > 40000 && millis() < 41000)
         setSpeedByTemperature(lfs_in, 20);
     if (millis() > 60000 && millis() < 61000)
-        digitalWrite(cfg_pin_fan_switch_in, LOW);
-        digitalWrite(cfg_pin_fan_switch_out, LOW);
+        digitalWrite(CFG_PIN_FAN_SWITCH_IN, LOW);
+        digitalWrite(CFG_PIN_FAN_SWITCH_OUT, LOW);
 
     if (millis() - _prev_monitor_millis > 3000)
     {

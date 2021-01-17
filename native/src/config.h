@@ -1,18 +1,20 @@
-#define cfg_hostname "hbfc"
+#ifndef CONFIG_H
+#define CONFIG_H
 
-#define cfg_wifi_ssid "XXX"
-#define cfg_wifi_pwd "XXX"
+#define CFG_HOSTNAME "hbfc"
+#define CFG_WIFI_SSID "XXX"
+#define CFG_WIFI_PWD "XXX"
+#define CFG_MQTT_SERVER "XXX"
 
-#define cfg_mqtt_server "XXX"
-
-#define cfg_pin_temp 19
-#define cfg_pin_fan_switch_in 21
-#define cfg_pin_fan_switch_out 17
-#define cfg_pin_fan_rpm_in 22
-#define cfg_pin_fan_rpm_out 5
-#define cfg_pin_fan_pwm_in 23
-#define cfg_pin_fan_pwm_out 18
-
+#define CFG_PIN_TEMP 19
+#define CFG_PIN_FAN_SWITCH_IN 21
+#define CFG_PIN_FAN_SWITCH_OUT 17
+#define CFG_PIN_FAN_RPM_IN 22
+#define CFG_PIN_FAN_RPM_OUT 5
+#define CFG_PIN_FAN_PWM_IN 23
+#define CFG_PIN_FAN_PWM_OUT 18
 #define CFG_PIN_IR_RECEIVE 4
 #define CFG_PIN_IR_SEND_OUT 2
 #define CFG_PIN_IR_SEND_IN 15
+
+#endif
