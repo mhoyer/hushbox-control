@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
 #include "config.h"
-#include "./OTA/OTA.h"
+#include "ota.h"
 #include "./WiFiCnx/WiFiCnx.h"
 #include "./MqttCtrl/MqttCtrl.h"
 #include "./InfraredCtrl/InfraredCtrl.h"
-#include "./LinearFanSpeed/LinearFanSpeed.h"
+#include "linear-fan-speed.h"
 #include "./RPMReader/RPMReader.h"
 #include "./TempReader/TempReader.h"
 
@@ -45,7 +45,7 @@ void set_fan_mode(String payload)
     }
 }
 
-lfc_t lfc_in, lfc_out;
+lfs_t lfs_in, lfs_out;
 void setup()
 {
     Serial.begin(9600);
@@ -58,20 +58,20 @@ void setup()
     digitalWrite(cfg_pin_fan_switch_in, HIGH);
     digitalWrite(cfg_pin_fan_switch_out, HIGH);
 
-    lfc_in.pin = cfg_pin_fan_pwm_in;
-    lfc_in.minTemp = 20;
-    lfc_in.maxTemp = 30;
-    lfc_out.pin = cfg_pin_fan_pwm_out;
-    lfc_out.minTemp = 20;
-    lfc_out.maxTemp = 30;
+    lfs_in.pin = cfg_pin_fan_pwm_in;
+    lfs_in.min_temp = 20;
+    lfs_in.max_temp = 30;
+    lfs_out.pin = cfg_pin_fan_pwm_out;
+    lfs_out.min_temp = 20;
+    lfs_out.max_temp = 30;
 
-    lfc_setup(lfc_in);
-    lfc_setup(lfc_out);
+    setupLinearFanSpeed(lfs_in);
+    setupLinearFanSpeed(lfs_out);
 
     wiFiCnx = new WiFiCnx(cfg_hostname, cfg_wifi_ssid, cfg_wifi_pwd);
     wiFiCnx->connect();
     delay(500);
-    ota_setup(cfg_hostname);
+    setupOTA(cfg_hostname);
 
     mqtt = new MqttCtrl(*(wiFiCnx->client), cfg_mqtt_server, cfg_hostname);
     mqtt->connect();
@@ -92,9 +92,9 @@ void loop()
     auto rpms = rpm_read();
 
     if (millis() > 15000 && millis() < 16000)
-        set_speed_by_temperature(lfc_in, 25);
+        setSpeedByTemperature(lfs_in, 25);
     if (millis() > 40000 && millis() < 41000)
-        set_speed_by_temperature(lfc_in, 20);
+        setSpeedByTemperature(lfs_in, 20);
     if (millis() > 60000 && millis() < 61000)
         digitalWrite(cfg_pin_fan_switch_in, LOW);
         digitalWrite(cfg_pin_fan_switch_out, LOW);

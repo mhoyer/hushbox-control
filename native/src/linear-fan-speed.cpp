@@ -1,16 +1,16 @@
 #include <analogWrite.h>
-#include "./LinearFanSpeed.h"
+#include "linear-fan-speed.h"
 
-void lfc_setup(lfc_t lfc)
+void setupLinearFanSpeed(lfs_t lfc)
 {
     pinMode(lfc.pin, OUTPUT);
     analogWriteFrequency(8000);
     analogWrite(lfc.pin, 255);
 }
 
-void set_speed_by_temperature(lfc_t lfc, float temp)
+void setSpeedByTemperature(lfs_t lfc, float temp)
 {
-    auto tempFactor = (temp - lfc.minTemp) / lfc.range();
+    float tempFactor = (temp - lfc.min_temp) / lfc.range();
     auto duty = max(0, min(255, (int)(tempFactor * 256)));
     analogWrite(lfc.pin, duty);
 }

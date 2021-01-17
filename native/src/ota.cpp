@@ -1,6 +1,6 @@
-#include "./OTA.h"
+#include "ota.h"
 
-void ota_setup(const char* hostname) {
+void setupOTA(const char* hostname) {
   ArduinoOTA.setHostname(hostname);
   ArduinoOTA
     .onStart([]() {
