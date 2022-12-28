@@ -30,3 +30,38 @@ Flashing the firmware:
 2. Now run: `esptool.py --chip esp32 --port /dev/ttyUSB0 --baud 460800 write_flash -z 0x1000 esp32-idf4-20200902-v1.13.bin`
 
 I tested `esp32-idf4-20191220-v1.12.bin` and `esp32-idf4-20191220-v1.13.bin` from https://micropython.org/download/esp32/.
+
+
+### Getting infos about ESP32
+
+While the ESP32 is connected to the serial adaptor you can run this `esptool` command and instantly have to press the `BOOT` button on the ESP32:
+
+```bash
+$ ./esptool --baud 921600 flash_id
+esptool.py v4.4
+Found 1 serial ports
+Serial port /dev/ttyUSB0
+Connecting....
+Detecting chip type... Unsupported detection protocol, switching and trying again...
+Connecting....
+Detecting chip type... ESP32
+Chip is ESP32-D0WDQ6 (revision v1.0)
+Features: WiFi, BT, Dual Core, Coding Scheme None
+Crystal is 40MHz
+MAC: 24:0a:c4:13:9a:90
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 921600
+Changed.
+Manufacturer: c8
+Device: 4016
+Detected flash size: 4MB
+Hard resetting via RTS pin...
+```
+
+#### Reading out the existing memory as a backup
+
+```bash
+./esptool --baud 921600 read_flash 0 0x400000 backup.bin
+```
