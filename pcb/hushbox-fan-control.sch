@@ -866,4 +866,19 @@ F 3 "" H 6150 3000 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 NoConn ~ 1050 1900
+$Comp
+L Device:CP C?
+U 1 1 6003A0F3
+P 4900 1400
+F 0 "C?" H 5050 1450 50  0000 L CNN
+F 1 "100u" H 5050 1350 50  0000 L CNN
+F 2 "Capacitor_THT:CP_Radial_D5.0mm_P2.50mm" H 4938 1250 50  0001 C CNN
+F 3 "~" H 4900 1400 50  0001 C CNN
+	1    4900 1400
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	4900 1550 4900 1600
+Wire Wire Line
+	4900 1600 5300 1600
 $EndSCHEMATC
