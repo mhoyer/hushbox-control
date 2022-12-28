@@ -45,6 +45,8 @@ namespace IR
     void turnReceiverOff()
     {
         ir_send_out->sendNEC(IR_YAMAHA_OFF);
+        ir_send_out->sendNEC(IR_YAMAHA_REPEAT);
+        ir_send_out->sendNEC(IR_YAMAHA_REPEAT);
     }
 
     void turnProjectorOn()
