@@ -11,6 +11,7 @@
 
 WiFiCnx *wiFiCnx;
 MqttCtrl *mqtt;
+lfs_t lfs_in, lfs_out;
 
 void set_movie_mode(String payload)
 {
@@ -45,18 +46,31 @@ void set_fan_mode(String payload)
     }
 }
 
-lfs_t lfs_in, lfs_out;
+void set_fan_speed(String payload)
+{
+    float speed = ::atof(payload.c_str());
+    Serial.println("Setting fan speed to " + payload);
+
+    setSpeedByTemperature(lfs_in, speed);
+    setSpeedByTemperature(lfs_out, speed);
+}
+
+void restart(String payload)
+{
+    esp_restart();
+}
+
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
     setupIR(CFG_PIN_IR_RECEIVE, CFG_PIN_IR_SEND_IN, CFG_PIN_IR_SEND_OUT);
     setupTemperaturesReader(CFG_PIN_TEMP);
     pinMode(CFG_PIN_FAN_SWITCH_IN, OUTPUT);
     pinMode(CFG_PIN_FAN_SWITCH_OUT, OUTPUT);
     setupRPMReader(CFG_PIN_FAN_RPM_IN, CFG_PIN_FAN_RPM_OUT);
-    digitalWrite(CFG_PIN_FAN_SWITCH_IN, HIGH);
-    digitalWrite(CFG_PIN_FAN_SWITCH_OUT, HIGH);
+    digitalWrite(CFG_PIN_FAN_SWITCH_IN, LOW);
+    digitalWrite(CFG_PIN_FAN_SWITCH_OUT, LOW);
 
     lfs_in.pin = CFG_PIN_FAN_PWM_IN;
     lfs_in.min_temp = 20;
@@ -67,6 +81,8 @@ void setup()
 
     setupLinearFanSpeed(lfs_in);
     setupLinearFanSpeed(lfs_out);
+    setSpeedByTemperature(lfs_in, 24);
+    setSpeedByTemperature(lfs_out, 24);
 
     wiFiCnx = new WiFiCnx(CFG_HOSTNAME, CFG_WIFI_SSID, CFG_WIFI_PWD);
     wiFiCnx->connect();
@@ -78,6 +94,8 @@ void setup()
     delay(1000);
     mqtt->subscribe("hushboxctrl/movie_mode", set_movie_mode);
     mqtt->subscribe("hushboxctrl/fan_mode", set_fan_mode);
+    mqtt->subscribe("hushboxctrl/fan_speed", set_fan_speed);
+    mqtt->subscribe("hushboxctrl/restart", restart);
 }
 
 unsigned long _prev_monitor_millis;
@@ -91,15 +109,15 @@ void loop()
     auto temps = readTemperatures();
     auto rpms = readRPMValues();
 
-    if (millis() > 15000 && millis() < 16000)
-        setSpeedByTemperature(lfs_in, 25);
-    if (millis() > 40000 && millis() < 41000)
-        setSpeedByTemperature(lfs_in, 20);
-    if (millis() > 60000 && millis() < 61000)
-        digitalWrite(CFG_PIN_FAN_SWITCH_IN, LOW);
-        digitalWrite(CFG_PIN_FAN_SWITCH_OUT, LOW);
+    // if (millis() > 15000 && millis() < 16000)
+    //     setSpeedByTemperature(lfs_in, 25);
+    // if (millis() > 40000 && millis() < 41000)
+    //     setSpeedByTemperature(lfs_in, 20);
+    // if (millis() > 60000 && millis() < 61000)
+    //     digitalWrite(CFG_PIN_FAN_SWITCH_IN, LOW);
+    //     digitalWrite(CFG_PIN_FAN_SWITCH_OUT, LOW);
 
-    if (millis() - _prev_monitor_millis > 3000)
+    if (millis() - _prev_monitor_millis > 10000)
     {
         _prev_monitor_millis = millis();
         Serial.print(millis());
@@ -113,7 +131,5 @@ void loop()
         Serial.print(rpms.out);
         Serial.println("RPM");
     }
-    delay(100);
-
-    // restart ESP after 24h?
+    yield();
 }
