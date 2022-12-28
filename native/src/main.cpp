@@ -55,6 +55,39 @@ void set_fan_speed(String payload)
     setSpeedByTemperature(lfs_out, speed);
 }
 
+// payload is: "(i|o) [<IR_CODE>, ...]"
+// example: "i 0x5EA1B847 0x5EA1D827"
+void send_ir_codes(String payload)
+{
+    Serial.println("Sending IR codes: " + payload);
+
+    bool use_ir_out = true;
+    if (payload.charAt(0) == 'i')
+    {
+        use_ir_out = false;
+    }
+    
+    Serial.printf("  Using '%s' IR port.\n", use_ir_out ? "out" : "in");
+
+    const char* delim = " ";
+    char* token = strtok(&payload[2], delim);
+
+    do
+    {
+        uint64_t code = strtoull(token, NULL, 16);
+        Serial.printf("  Token: %llu\n", code);
+        if (use_ir_out)
+        {
+            IR::send_ir_out(code);
+        }
+        else
+        {
+            IR::send_ir_in(code);
+        }
+    }
+    while ((token = strtok(NULL, delim)));
+}
+
 void restart(String payload)
 {
     esp_restart();
@@ -96,6 +129,7 @@ void setup()
     mqtt->subscribe("hushboxctrl/fan_mode", set_fan_mode);
     mqtt->subscribe("hushboxctrl/fan_speed", set_fan_speed);
     mqtt->subscribe("hushboxctrl/restart", restart);
+    mqtt->subscribe("hushboxctrl/send_ir_codes", send_ir_codes);
 }
 
 unsigned long _prev_monitor_millis;

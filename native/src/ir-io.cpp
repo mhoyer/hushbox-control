@@ -35,6 +35,16 @@ uint64_t decodeIR()
 
 namespace IR
 {
+    void send_ir_in(uint64_t code)
+    {
+        ir_send_in->sendNEC(code);
+    }
+
+    void send_ir_out(uint64_t code)
+    {
+        ir_send_out->sendNEC(code);
+    }
+
     void turnReceiverOn()
     {
         ir_send_out->sendNEC(IR_YAMAHA_ON);

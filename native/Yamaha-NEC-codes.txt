@@ -1,0 +1,33 @@
+Found at: https://gist.github.com/Keeo/394f99846c179041e3d5bd158bfce704
+
+0x9E6106F9 => CD on/off
+0x9E61807F => Open / Close
+0x7E8154AB => Amp on/off
+0x5EA1BB44 => Pure direct
+0x5EA118E7 => Coaxial
+0x5EA1CA34 => Optical
+0x5EA19867 => Line 1
+0x5EA1837C => Line 2
+0x5EA103FC => Line 3
+0x5EA16897 => Tuner
+0x5EA128D7 => Phono
+0x5EA1A857 => CD
+0x5EA1758A => Band
+0xFE8026D8 => Tuning <<
+0xFE808678 => Tuning >>
+0x5EA1F50A => Memory
+0x5EA18877 => Preset
+0x5EA108F7 => Preset >
+0x9E61A05F => <<
+0x9E61F20D => Disk skip
+0x9E61609F => >>
+0x9E6140BF => Play
+0x9E61AA55 => Pause
+0x9E616A95 => Stop
+0x9E6120DF => |<<
+0x9E61E01F => >>|
+0x5EA158A7 => Volume +
+0x5EA1D827 => Volume -
+0x5EA138C7 => Mute
+
+0xFFFFFFFFFFFFFFFF => repeat

@@ -21,6 +21,8 @@ uint64_t decodeIR(void);
 
 namespace IR
 {
+    void send_ir_in(uint64_t code);
+    void send_ir_out(uint64_t code);
     void turnReceiverOn();
     void turnProjectorOn();
     void turnReceiverOff();
