@@ -98,9 +98,10 @@ void setup()
     Serial.begin(115200);
 
     setupIR(CFG_PIN_IR_RECEIVE, CFG_PIN_IR_SEND_IN, CFG_PIN_IR_SEND_OUT);
-    setupTemperaturesReader(CFG_PIN_TEMP);
+    // setupTemperaturesReader(CFG_PIN_TEMP);
     pinMode(CFG_PIN_FAN_SWITCH_IN, OUTPUT);
     pinMode(CFG_PIN_FAN_SWITCH_OUT, OUTPUT);
+    pinMode(LED_BUILTIN, OUTPUT);
     setupRPMReader(CFG_PIN_FAN_RPM_IN, CFG_PIN_FAN_RPM_OUT);
     digitalWrite(CFG_PIN_FAN_SWITCH_IN, LOW);
     digitalWrite(CFG_PIN_FAN_SWITCH_OUT, LOW);
@@ -130,6 +131,8 @@ void setup()
     mqtt->subscribe("hushboxctrl/fan_speed", set_fan_speed);
     mqtt->subscribe("hushboxctrl/restart", restart);
     mqtt->subscribe("hushboxctrl/send_ir_codes", send_ir_codes);
+
+    Serial.println("Setup done");
 }
 
 unsigned long _prev_monitor_millis;
@@ -140,7 +143,7 @@ void loop()
     mqtt->loop();
 
     decodeIR();
-    auto temps = readTemperatures();
+    // auto temps = readTemperatures();
     auto rpms = readRPMValues();
 
     // if (millis() > 15000 && millis() < 16000)
@@ -155,15 +158,22 @@ void loop()
     {
         _prev_monitor_millis = millis();
         Serial.print(millis());
-        Serial.print(" | Temp in=");
-        Serial.print(temps.in);
-        Serial.print("C  out=");
-        Serial.print(temps.out);
-        Serial.print("C | Fan speed in=");
+        
+        // Serial.print(" | Temp in=");
+        // Serial.print(temps.in);
+        // Serial.print("C  out=");
+        // Serial.print(temps.out);
+        // Serial.print("C");
+
+        Serial.print(" | Fan speed in=");
         Serial.print(rpms.in);
         Serial.print("RPM  out=");
         Serial.print(rpms.out);
         Serial.println("RPM");
+        
+        digitalWrite(LED_BUILTIN, HIGH);
+        delay(20);
+        digitalWrite(LED_BUILTIN, LOW);
     }
     yield();
 }

@@ -1,4 +1,4 @@
-#include <analogWrite.h>
+#include <Arduino.h>
 #include "linear-fan-speed.h"
 
 void setupLinearFanSpeed(lfs_t lfc)
