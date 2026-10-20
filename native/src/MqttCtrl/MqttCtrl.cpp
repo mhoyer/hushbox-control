@@ -29,33 +29,36 @@ void MqttCtrl::connect()
 
 void MqttCtrl::_reconnect()
 {
-    if (!this->_pubSubClient->connected())
+    if (this->_pubSubClient->connected())
     {
-        if (millis() > 5000 && millis() - this->_lastConnect < 10000)
-        {
-            return;
-        }
-        this->_lastConnect = millis();
+        return;
+    }
 
-        this->_pubSubClient = new PubSubClient(*this->_netClient);
-        this->_pubSubClient->setServer(this->_server.c_str(), 1883);
-        this->_pubSubClient->setCallback(std::bind(&MqttCtrl::receivedCallback, this, _1, _2, _3));
+    if (millis() > 5000 && millis() - this->_lastConnect < 10000)
+    {
+        return;
+    }
+    this->_lastConnect = millis();
 
-        const char *clientId = this->_clientId.c_str();
-        Serial.print("MQTT connecting to ");
-        Serial.println(this->_server);
-        if (this->_pubSubClient->connect(clientId))
-        {
-            Serial.println("Connected.");
-            return;
-        }
-        else
-        {
-            Serial.print("failed, status code = ");
-            Serial.print(this->_pubSubClient->state());
-            Serial.println(". Try again in next loop.");
-            delay(1000);
-        }
+    this->_pubSubClient = new PubSubClient(*this->_netClient);
+    this->_pubSubClient->setServer(this->_server.c_str(), 1883);
+    this->_pubSubClient->setCallback(std::bind(&MqttCtrl::receivedCallback, this, _1, _2, _3));
+
+    const char *clientId = this->_clientId.c_str();
+    Serial.print("Connecting to MQTT broker: ");
+    Serial.print(this->_server);
+    Serial.println("...");
+    if (this->_pubSubClient->connect(clientId))
+    {
+        Serial.println("Connected to MQTT broker.");
+        return;
+    }
+    else
+    {
+        Serial.print("Connect to MQTT broker failed, status code = ");
+        Serial.print(this->_pubSubClient->state());
+        Serial.println(". Try again in next loop.");
+        delay(1000);
     }
 }
 
@@ -78,7 +81,13 @@ void MqttCtrl::loop()
 
 void MqttCtrl::subscribe(String topic, TOPIC_RCV_CALLBACK_SIGNATURE cb)
 {
-    if (this->_pubSubClient->connected() && _subscriptions.find(topic) == _subscriptions.end())
+    if (!this->_pubSubClient->connected())
+    {
+        return;
+    }
+
+    // check if already subscribed to topic with a callback
+    if (_subscriptions.find(topic) == _subscriptions.end())
     {
         this->_pubSubClient->subscribe(topic.c_str());
         Serial.print("Subscribed to ");
@@ -90,7 +99,7 @@ void MqttCtrl::subscribe(String topic, TOPIC_RCV_CALLBACK_SIGNATURE cb)
 
 void MqttCtrl::_resubscribe()
 {
-    Serial.println("Resubscribing");
+    Serial.println("Resubscribing to MQTT topics.");
 
     for (const auto &sub : _subscriptions) {
         auto topic = sub.first;
