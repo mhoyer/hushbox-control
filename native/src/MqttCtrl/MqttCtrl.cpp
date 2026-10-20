@@ -64,12 +64,16 @@ void MqttCtrl::loop()
     if (!this->_pubSubClient->connected())
     {
         this->_reconnect();
+        if (!this->_pubSubClient->connected())
+        {
+            delay(500);
+            return;
+        }
+
         this->_resubscribe();
     }
-    else
-    {
-        this->_pubSubClient->loop();
-    }
+
+    this->_pubSubClient->loop();
 }
 
 void MqttCtrl::subscribe(String topic, TOPIC_RCV_CALLBACK_SIGNATURE cb)
